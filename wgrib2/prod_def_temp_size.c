@@ -60,7 +60,7 @@ int prod_def_temp_size(unsigned char **sec) {
 	case 1002: return 35;
 	case 1100: return 34;
 	case 1101: return 46;
-	case 50011: return 82; /* added by Sawada */
+	case 50011: return 58;  // added for 4.50011, which is not extendable; not very sure
 	default: return -1;
     }
     return -1;

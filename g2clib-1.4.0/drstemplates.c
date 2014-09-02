@@ -145,18 +145,18 @@ gtemplate *extdrstemplate(g2int number,g2int *list)
            if ( ! new->needext ) return(new);
 
            if ( number == 1 ) {
-              new->extlen=list[10]+list[12];
+              new->extlen=list[10]+list[12]; // NC1 and NC2
               new->ext=(g2int *)malloc(sizeof(g2int)*new->extlen);
               for (i=0;i<new->extlen;i++) {
                 new->ext[i]=4;
               }
            } 
-           // 5.200 added by Sawada
+           // 5.200 
            else if ( number == 200 ) {
-              new->extlen=list[1];
+              new->extlen=list[2]; // #3:15-16 Max Level 
               new->ext=(g2int *)malloc(sizeof(g2int)*new->extlen);
               for (i=0;i<new->extlen;i++) {
-                new->ext[i]=2;
+                new->ext[i]=2;  // data table for levels from Level 1 to Max Level
               }
            } 
            return(new);

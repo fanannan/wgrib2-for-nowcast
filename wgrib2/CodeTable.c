@@ -486,8 +486,8 @@ int code_table_4_1(unsigned char **sec) {
     p = GB2_ProdDefTemplateNo(sec);
     if (p <= 15 || p == 20 || (p >= 30 && p <= 32) || (p >= 40 && p <= 48) || (p >= 50 && p <= 52) || p == 91 ||
            p == 254 || (p >= 1000 && p <= 1002) || p == 1100 || p == 1101
-            || p == 50011 // added by Sawada
-            ) return (int) sec[4][9];
+            || p == 50011 // added for 4.50011
+            ) return (int) sec[4][9];  // parameter category
     return -1;
 }
 
@@ -508,9 +508,9 @@ int code_table_4_2(unsigned char **sec) {
     p = GB2_ProdDefTemplateNo(sec);
     if (p <= 15 || p == 20 || (p >= 30 && p <= 32) || (p >= 40 && p <= 48) ||  (p >= 50 && p <= 52) || p == 91 ||
            p == 254 || (p >= 1000 && p <= 1002) || p == 1100 || p == 1101
-           || p == 50011 // added by Sawada
+           || p == 50011 // added for 4.50011
            ) 
-        return (int) sec[4][10];
+        return (int) sec[4][10]; // parameter number
     return -1;
 }
 
@@ -553,7 +553,7 @@ unsigned char *code_table_4_3_location(unsigned char **sec) {
     case 6:
     case 7:
     case 8:
-    case 50011: // added by Sawada
+    case 50011: // added for 4.50011
     case 9:
     case 10:
     case 11:
@@ -569,7 +569,7 @@ unsigned char *code_table_4_3_location(unsigned char **sec) {
     case 1002:
     case 1100:
     case 1101:
-        return sec[4]+11; break;
+        return sec[4]+11; break; // process type
     case 40:
     case 41:
     case 42:
@@ -624,7 +624,7 @@ unsigned char *code_table_4_4_location(unsigned char **sec) {
     case 6:
     case 7:
     case 8:
-    case 50011: // added by Sawada
+    case 50011: // added for 4.50011
     case 9:
     case 10:
     case 11:
@@ -638,7 +638,7 @@ unsigned char *code_table_4_4_location(unsigned char **sec) {
     case 1000:
     case 1001:
     case 1002:
-	return sec[4] + 17;
+	return sec[4] + 17; // term unit
     case 40:
     case 41:
     case 42:
@@ -704,7 +704,7 @@ unsigned char *code_table_4_5a_location(unsigned char **sec) {
     case 6:
     case 7:
     case 8:
-    case 50011:  // added by Sawada
+    case 50011:  // added for 4.50011
     case 9:
     case 10:
     case 11:
@@ -714,7 +714,7 @@ unsigned char *code_table_4_5a_location(unsigned char **sec) {
     case 15:
     case 1100:
     case 1101:
-         return sec[4]+22; break;
+         return sec[4]+22; break; // type of first fixed surface
     case 40:
     case 41:
     case 42:
@@ -773,7 +773,7 @@ unsigned char *code_table_4_5b_location(unsigned char **sec) {
     case 6:
     case 7:
     case 8:
-    case 50011: // added by Sawada
+    case 50011: // added for 4.50011
     case 9:
     case 10:
     case 11:
@@ -783,7 +783,7 @@ unsigned char *code_table_4_5b_location(unsigned char **sec) {
     case 15:
     case 1100:
     case 1101:
-        return sec[4]+28; break;
+        return sec[4]+28; break; // type of second fixed surface
     case 40:
     case 41:
     case 42:
@@ -942,7 +942,7 @@ unsigned char *code_table_4_10_location(unsigned char **sec) {
     val = GB2_ProdDefTemplateNo(sec);
     switch (val) {
         case 8: p = sec[4] + 46; break;
-        case 50011: p = sec[4] + 46; break; // added by Sawada
+        case 50011: p = sec[4] + 46; break; // added for 4.50011, type of stat process
         case 9: p = sec[4] + 59; break;
         case 10: p = sec[4] + 47; break;
         case 11: p = sec[4] + 49; break;
@@ -1016,7 +1016,7 @@ unsigned char *code_table_4_11_location(unsigned char **sec) {
     val = GB2_ProdDefTemplateNo(sec);
     switch (val) {
         case 8: p = sec[4] + 47; break;
-        case 50011: p = sec[4] + 47; break; // added by Sawada
+        case 50011: p = sec[4] + 47; break; // added for 4.50011, type of time incerment for stat process
         case 9: p = sec[4] + 60; break;
         case 10: p = sec[4] + 48; break;
         case 11: p = sec[4] + 50; break;

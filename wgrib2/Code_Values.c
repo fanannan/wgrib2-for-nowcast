@@ -114,7 +114,7 @@ unsigned char *background_generating_process_identifier_location(unsigned char *
     int p;
     p = GB2_ProdDefTemplateNo(sec);
     if (p <= 15 || p == 1000 || p == 1001 || p == 1002 || p == 1100 || p == 1101
-    || p == 50011) // addded by Sawada
+    || p == 50011) // addded for 4.50011 
         return sec[4]+12;
     if ( (p >= 40 && p <= 43) )
         return sec[4]+14;
@@ -135,7 +135,7 @@ unsigned char *analysis_or_forecast_generating_process_identifier_location(unsig
     int p;
     p = GB2_ProdDefTemplateNo(sec);
     if (p <= 15 || p == 1000 || p == 1001 || p == 1002 || p == 1100 || p == 1101
-    || p == 50011) // addded by Sawada
+    || p == 50011) // addded for 4.50011
         return sec[4]+13;
     if ( (p >= 40 && p <= 43) )
         return sec[4]+15;
@@ -148,7 +148,7 @@ int hours_of_observational_data_cutoff_after_reference_time(unsigned char **sec)
     int p;
     p = GB2_ProdDefTemplateNo(sec);
     if (p <= 15 || p == 1000 || p == 1001 || p == 1002 || p == 1100 || p == 1101
-    || p == 50011) // addded by Sawada
+    || p == 50011) // addded for 4.50011
         return int2(sec[4]+14);
     if ( p == 44 ) return int2(sec[4]+27);
     if ( p == 48 ) return int2(sec[4]+38);
@@ -159,7 +159,7 @@ int minutes_of_observational_data_cutoff_after_reference_time(unsigned char **se
     int p;
     p = GB2_ProdDefTemplateNo(sec);
     if (p <= 15 || p == 1000 || p == 1001 || p == 1002 || p == 1100 || p == 1101
-    || p == 50011) // addded by Sawada
+    || p == 50011) // addded for 4.50011
         return int1(sec[4]+16);
     if ( p == 44 ) return int1(sec[4]+29);
     if ( p == 48 ) return int1(sec[4]+40);

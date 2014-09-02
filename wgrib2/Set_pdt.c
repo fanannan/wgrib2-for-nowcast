@@ -66,6 +66,7 @@ int f_set_pdt(ARG1) {
         case 254: len = 15; break;
 	case 1000: len = 22; break;
 	case 1001: len = 38; break;
+	case 50011: len = 54; break; // added for 4.50011, not very sure
         default: fatal_error_i("set_pdt: unsupported pdt=%d",pdt); break;
         }
     }

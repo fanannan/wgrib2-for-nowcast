@@ -137,8 +137,9 @@ g2int g2_unpack7(unsigned char *cgrib,g2int *iofst,g2int igdsnum,g2int *igdstmpl
         pngunpack(cgrib+ipos,lensec-5,idrstmpl,ndpts,lfld);
         }
 #endif  /* USE_PNG */
-      else if (idrsnum == 200) { // added by Sawada
-        //pngunpack(cgrib+ipos,lensec-5,idrstmpl,ndpts,lfld);
+      else if (idrsnum == 200) { // added for 5.200
+        // TODO: not implemented.
+        fprintf(stderr,"g2_unpack7: 5.200 \n");
       }
       else {
         fprintf(stderr,"g2_unpack7: Data Representation Template 5.%d not yet implemented.\n",(int)idrsnum);

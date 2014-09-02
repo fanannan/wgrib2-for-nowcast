@@ -40,8 +40,7 @@
 //
 //$$$
 
-//      #define MAXPDSTEMP 39           // maximum number of templates
-      #define MAXPDSTEMP 40           // maximum number of templates // modified by Sawada
+      #define MAXPDSTEMP 40           // maximum number of templates // inremented for 4.50011
       #define MAXPDSMAPLEN 200        // maximum template map length
 
       struct pdstemplate 
@@ -190,13 +189,8 @@
             1,-1,-4,1,-1,-4, //31-34
             2,1,1,1,1,1, //35-36:y, 37:m, 38:d, 39:h, 40:m, 41:s,
             1,4,1,1,1,4,1,4, //54
-            8,8,8} //A map of the template (mappds) , which contains the number of octets in which to pack each of the template values
-//   NOTE:  Array mappds contains the number of octets in which the 
-//   corresponding template values will be stored.  A negative value in
-//   mappds is used to indicate that the corresponding template entry can
-//   contain negative values.           
+            8,8,8} //A map of the template (mappds) , which contains the number of octets in which to pack each of the template values         
         }
       } ;
-
 
 #endif  /*  _pdstemplates_H  */

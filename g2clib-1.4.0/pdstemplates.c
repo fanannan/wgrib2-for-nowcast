@@ -175,7 +175,8 @@ gtemplate *extpdstemplate(g2int number,g2int *list)
                  new->ext[i]=1;
               }
            }
-           else if ( number == 8 ) {
+           else if ( number == 8 
+           || number == 50011 ) { // cases for the lacks of the data values
               if ( list[21] > 1 ) {
                  new->extlen=(list[21]-1)*6;
                  new->ext=(g2int *)malloc(sizeof(g2int)*new->extlen);
