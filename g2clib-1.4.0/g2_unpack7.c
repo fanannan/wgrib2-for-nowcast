@@ -138,7 +138,7 @@ g2int g2_unpack7(unsigned char *cgrib,g2int *iofst,g2int igdsnum,g2int *igdstmpl
         }
 #endif  /* USE_PNG */
       else if (idrsnum == 200) { // added for 5.200
-        // TODO: not implemented.
+        //decode_rle();
         fprintf(stderr,"g2_unpack7: 5.200 \n");
       }
       else {

@@ -28,7 +28,8 @@ int free_gribfield = 0;			// flag for allocated gribfield
 #endif
 
 /* #define DEBUG */
-#define CHECK
+#define DEBUG 1
+#define CHECK 1
 
 /* global variables .. can be modified by funtions */
 
