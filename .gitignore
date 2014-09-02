@@ -1,3 +1,21 @@
 *~
+*.~*
 *.o
+*.so
+*.a
+*.lib
+aux_progs/gmerge
+aux_progs/smallest_4
+aux_progs/smallest_grib2
+bin/
+gctpc/
+jasper-1.900.1/
+lib/
+libpng-1.2.50/
+man/
+netcdf-3.6.3/
+share/
+wgrib2/fnlist
+wgrib2/wgrib2
+zlib-1.2.8/
 

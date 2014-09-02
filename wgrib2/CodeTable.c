@@ -485,7 +485,9 @@ int code_table_4_1(unsigned char **sec) {
     int p;
     p = GB2_ProdDefTemplateNo(sec);
     if (p <= 15 || p == 20 || (p >= 30 && p <= 32) || (p >= 40 && p <= 48) || (p >= 50 && p <= 52) || p == 91 ||
-           p == 254 || (p >= 1000 && p <= 1002) || p == 1100 || p == 1101) return (int) sec[4][9];
+           p == 254 || (p >= 1000 && p <= 1002) || p == 1100 || p == 1101
+            || p == 50011 // added by Sawada
+            ) return (int) sec[4][9];
     return -1;
 }
 
@@ -505,7 +507,9 @@ int code_table_4_2(unsigned char **sec) {
     int p;
     p = GB2_ProdDefTemplateNo(sec);
     if (p <= 15 || p == 20 || (p >= 30 && p <= 32) || (p >= 40 && p <= 48) ||  (p >= 50 && p <= 52) || p == 91 ||
-           p == 254 || (p >= 1000 && p <= 1002) || p == 1100 || p == 1101) 
+           p == 254 || (p >= 1000 && p <= 1002) || p == 1100 || p == 1101
+           || p == 50011 // added by Sawada
+           ) 
         return (int) sec[4][10];
     return -1;
 }
@@ -549,6 +553,7 @@ unsigned char *code_table_4_3_location(unsigned char **sec) {
     case 6:
     case 7:
     case 8:
+    case 50011: // added by Sawada
     case 9:
     case 10:
     case 11:
@@ -619,6 +624,7 @@ unsigned char *code_table_4_4_location(unsigned char **sec) {
     case 6:
     case 7:
     case 8:
+    case 50011: // added by Sawada
     case 9:
     case 10:
     case 11:
@@ -698,6 +704,7 @@ unsigned char *code_table_4_5a_location(unsigned char **sec) {
     case 6:
     case 7:
     case 8:
+    case 50011:  // added by Sawada
     case 9:
     case 10:
     case 11:
@@ -766,6 +773,7 @@ unsigned char *code_table_4_5b_location(unsigned char **sec) {
     case 6:
     case 7:
     case 8:
+    case 50011: // added by Sawada
     case 9:
     case 10:
     case 11:
@@ -934,6 +942,7 @@ unsigned char *code_table_4_10_location(unsigned char **sec) {
     val = GB2_ProdDefTemplateNo(sec);
     switch (val) {
         case 8: p = sec[4] + 46; break;
+        case 50011: p = sec[4] + 46; break; // added by Sawada
         case 9: p = sec[4] + 59; break;
         case 10: p = sec[4] + 47; break;
         case 11: p = sec[4] + 49; break;
@@ -1007,6 +1016,7 @@ unsigned char *code_table_4_11_location(unsigned char **sec) {
     val = GB2_ProdDefTemplateNo(sec);
     switch (val) {
         case 8: p = sec[4] + 47; break;
+        case 50011: p = sec[4] + 47; break; // added by Sawada
         case 9: p = sec[4] + 60; break;
         case 10: p = sec[4] + 48; break;
         case 11: p = sec[4] + 50; break;

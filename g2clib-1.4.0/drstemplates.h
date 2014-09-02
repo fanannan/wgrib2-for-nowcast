@@ -31,7 +31,8 @@
 //
 ///////////////////////////////////////////////////////////////////////
 
-      #define MAXDRSTEMP 9              // maximum number of templates
+      //#define MAXDRSTEMP 9              // maximum number of templates
+      #define MAXDRSTEMP 10              // maximum number of templates // modified by Sawada
       #define MAXDRSMAPLEN 200          // maximum template map length
 
       struct drstemplate
@@ -62,7 +63,9 @@
              // 5.40000: Grid point data - JPEG2000 encoding
          { 40000, 7, 0, {4,-2,-2,1,1,1,1} },
              // 5.40010: Grid point data - PNG encoding
-         { 40010, 5, 0, {4,-2,-2,1,1} }
+         { 40010, 5, 0, {4,-2,-2,1,1} },
+             // 5.200 added by Sawada (followed 5.1 definitio but not sure why 5.1 is commented out here)
+         { 200, 4, 1, {1,2,2,1} } // last code is extendable 
       } ;
 
 

@@ -150,7 +150,15 @@ gtemplate *extdrstemplate(g2int number,g2int *list)
               for (i=0;i<new->extlen;i++) {
                 new->ext[i]=4;
               }
-           }
+           } 
+           // 5.200 added by Sawada
+           else if ( number == 200 ) {
+              new->extlen=list[1];
+              new->ext=(g2int *)malloc(sizeof(g2int)*new->extlen);
+              for (i=0;i<new->extlen;i++) {
+                new->ext[i]=2;
+              }
+           } 
            return(new);
 
 }

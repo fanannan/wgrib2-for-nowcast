@@ -1,6 +1,5 @@
 # REQUIRES GMAKE!!!!
 #
-# makefile for wgrib2
 # 
 # compiles every #@?! library needed by wgrib2
 # then tries to compile wgrib2
@@ -96,11 +95,13 @@ USE_NETCDF3=1
 USE_NETCDF4=0
 USE_REGEX=1
 USE_TIGGE=1
-USE_MYSQL=0
+#USE_MYSQL=0
+USE_MYSQL=1
 USE_IPOLATES=0
 USE_UDF=0
 USE_OPENMP=1
 USE_PROJ4=0
+#USE_G2CLIB=1
 USE_G2CLIB=1
 USE_WMO_VALIDATION=0
 

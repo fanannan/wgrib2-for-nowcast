@@ -113,7 +113,8 @@ int background_generating_process_identifier(unsigned char **sec) {
 unsigned char *background_generating_process_identifier_location(unsigned char **sec) {
     int p;
     p = GB2_ProdDefTemplateNo(sec);
-    if (p <= 15 || p == 1000 || p == 1001 || p == 1002 || p == 1100 || p == 1101)
+    if (p <= 15 || p == 1000 || p == 1001 || p == 1002 || p == 1100 || p == 1101
+    || p == 50011) // addded by Sawada
         return sec[4]+12;
     if ( (p >= 40 && p <= 43) )
         return sec[4]+14;
@@ -133,7 +134,8 @@ int analysis_or_forecast_generating_process_identifier(unsigned char **sec) {
 unsigned char *analysis_or_forecast_generating_process_identifier_location(unsigned char **sec) {
     int p;
     p = GB2_ProdDefTemplateNo(sec);
-    if (p <= 15 || p == 1000 || p == 1001 || p == 1002 || p == 1100 || p == 1101)
+    if (p <= 15 || p == 1000 || p == 1001 || p == 1002 || p == 1100 || p == 1101
+    || p == 50011) // addded by Sawada
         return sec[4]+13;
     if ( (p >= 40 && p <= 43) )
         return sec[4]+15;
@@ -145,7 +147,8 @@ unsigned char *analysis_or_forecast_generating_process_identifier_location(unsig
 int hours_of_observational_data_cutoff_after_reference_time(unsigned char **sec) {
     int p;
     p = GB2_ProdDefTemplateNo(sec);
-    if (p <= 15 || p == 1000 || p == 1001 || p == 1002 || p == 1100 || p == 1101)
+    if (p <= 15 || p == 1000 || p == 1001 || p == 1002 || p == 1100 || p == 1101
+    || p == 50011) // addded by Sawada
         return int2(sec[4]+14);
     if ( p == 44 ) return int2(sec[4]+27);
     if ( p == 48 ) return int2(sec[4]+38);
@@ -155,7 +158,8 @@ int hours_of_observational_data_cutoff_after_reference_time(unsigned char **sec)
 int minutes_of_observational_data_cutoff_after_reference_time(unsigned char **sec) {
     int p;
     p = GB2_ProdDefTemplateNo(sec);
-    if (p <= 15 || p == 1000 || p == 1001 || p == 1002 || p == 1100 || p == 1101)
+    if (p <= 15 || p == 1000 || p == 1001 || p == 1002 || p == 1100 || p == 1101
+    || p == 50011) // addded by Sawada
         return int1(sec[4]+16);
     if ( p == 44 ) return int1(sec[4]+29);
     if ( p == 48 ) return int1(sec[4]+40);

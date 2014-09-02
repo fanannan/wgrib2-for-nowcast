@@ -40,7 +40,8 @@
 //
 //$$$
 
-      #define MAXPDSTEMP 39           // maximum number of templates
+//      #define MAXPDSTEMP 39           // maximum number of templates
+      #define MAXPDSTEMP 40           // maximum number of templates // modified by Sawada
       #define MAXPDSMAPLEN 200        // maximum template map length
 
       struct pdstemplate 
@@ -173,11 +174,28 @@
              // 4.51: Categorical forecasts at a horizontal level or
              // in a horizontal layer at a point in time
          {51,16,1, {1,1,1,1,1,2,1,1,4,1,-1,-4,1,-1,-4,1} },
+
              // 4.91: Categorical forecasts at a horizontal level or
              // in a horizontal layer at a point in time
              // in a continuous or non-continuous time interval
-         {91,16,1, {1,1,1,1,1,2,1,1,4,1,-1,-4,1,-1,-4,1} }
+         {91,16,1, {1,1,1,1,1,2,1,1,4,1,-1,-4,1,-1,-4,1} },
 
+             // 4.50011: NOWCAST by JMA, added by Sawada
+             // based on 4.8: Ave/Accum/etc... at Horiz Level/Layer
+             //      in a time interval
+         {50011, //template_num
+          32, //The number of entries in the template  (mappdslen)
+          1, //a logical value (needext) that indicates whether the Template needs  to be extended.
+          {1,1,1,1,1,2,1,1,4, //19-22
+            1,-1,-4,1,-1,-4, //31-34
+            2,1,1,1,1,1, //35-36:y, 37:m, 38:d, 39:h, 40:m, 41:s,
+            1,4,1,1,1,4,1,4, //54
+            8,8,8} //A map of the template (mappds) , which contains the number of octets in which to pack each of the template values
+//   NOTE:  Array mappds contains the number of octets in which the 
+//   corresponding template values will be stored.  A negative value in
+//   mappds is used to indicate that the corresponding template entry can
+//   contain negative values.           
+        }
       } ;
 
 
