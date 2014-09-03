@@ -29,7 +29,7 @@ int f_csv_nz(ARG1) {
         FILE *out;
 
         unsigned int j;
-        char vt[20],rt[20];
+        char vt[20],rt[20],et[20];
         int year, month, day, hour, minute, second;
 
         /* initialization phase */
@@ -64,18 +64,29 @@ int f_csv_nz(ARG1) {
         }
 
         // parameter name (Section 4-11)
+#if DEBUG
         getExtName(sec, mode, NULL, name, desc, unit,".","_");
+#endif
+        int param= getParamNum(sec);
+        if(param != 8 && param != 203 && param != 214){
+                fprintf(stderr,"csv_nz: illegal param type (section 4-11), record skipped\n");
+                return 0;
+        }
 
         // forecast time  (section 4-19:22)
         vt[0] = 0;
         unsigned int ft = forecast_time_in_units(sec);
-        signed int sft = (ft & 0x80000000 == 0) ? ((signed int) ft) : -((signed int) (ft & 0x7fffffff));
+        signed int sft = (ft & 0x80000000) ? -((signed int) (ft & 0x7fffffff)) : ((signed int) ft);
         sprintf(vt, "%d", sft);
 #if DEBUG
         //printf("reference time: %4.4d-%2.2d-%2.2d %2.2d\n", year,month,day,hour);
         printf("reference time: %4.4d-%2.2d-%2.2d %2.2d:%2.2d", year,month,day,hour,minute);
         printf("forecast time: %d\n", sft);
 #endif
+
+        // end time (section 4-35:41)
+        endtime(50011, sec, &year, &month, &day, &hour, &minute, &second);
+        sprintf(et, "%2.2d%2.2d", hour,minute);        
 
         // stat type (section 4-47) (4.50011)        
         int stat_type = getStatType(sec); // 1, 195, 196
@@ -107,19 +118,21 @@ int f_csv_nz(ARG1) {
         /* open output file */
         out = (FILE *) *local;
         for (j = 0; j < ndata; j++) {
-            if (!UNDEFINED_VAL(data[j])) {
-                //fprintf(out,"\"%s\",%s,\"%s\",\"%s\",%g,%g,%lg\n", rt, vt, name, new_inv_out, lon[j] > 180.0 ?  lon[j]-360.0 : lon[j], lat[j], data[j]);
-                fprintf(out,"\"%s\",%s,\"%s\",%d,%d,%g,%g,%lg\n", rt, vt, name, stat_type, stat_process_time, lon[j] > 180.0 ?  lon[j]-360.0 : lon[j], lat[j], data[j]);
-                //printf("\"%s\",%s,\"%s\",%g,%g,%lg\n", rt, vt, name, lon[j] > 180.0 ?  lon[j]-360.0 : lon[j], lat[j], data[j]);
+            if (!UNDEFINED_VAL(data[j]) && data[j] > 0.0 && (param == 8 || param == 203)) {
+                //fprintf(out,"\"%s\",\"%s\",%s,\"%s\",%d,%d,%g,%g,%lg\n", rt, et, vt, name, stat_type, stat_process_time, lon[j] > 180.0 ?  lon[j]-360.0 : lon[j], lat[j], data[j]);
+                fprintf(out,"\"%s\",\"%s\",%s,%g,%g,%lg\n", rt, et, vt, lon[j] > 180.0 ?  lon[j]-360.0 : lon[j], lat[j], data[j]);
             }
         }
-
         if (flush_mode) fflush(out);
         return 0;
 }
 
 int getStatus(unsigned char **sec){
         return (int)(sec[1][20-1]);
+}
+
+int getParamNum(unsigned char **sec){
+        return (int)(sec[4][11-1]);
 }
 
 int getStatType(unsigned char **sec){

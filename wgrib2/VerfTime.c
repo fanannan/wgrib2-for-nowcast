@@ -295,3 +295,18 @@ int reftime(unsigned char **sec, int *year, int *month, int *day, int *hour, int
     return 0;
 }
 
+//obly for 4.50011 & 4.8
+int endtime(int pdt, unsigned char **sec, int *year, int *month, int *day, int *hour, int *minute, int *second)
+{
+    unsigned char *p;
+    if(!(pdt == 50011 || pdt == 8)) return -1;
+    p = sec[4];
+    *year = (p[35-1] << 8) | p[36-1];
+    *month = p[37-1];
+    *day = p[38-1];
+    *hour = p[39-1];
+    *minute = p[40-1];
+    *second = p[41-1];
+    return 0;
+}
+
