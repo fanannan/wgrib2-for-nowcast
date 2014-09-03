@@ -24,72 +24,112 @@ extern int decode, latlon;
 
 int f_csv_nz(ARG1) {
 
-    char new_inv_out[STRING_SIZE];
-    char name[100], desc[100], unit[100];
-    FILE *out;
+        //char new_inv_out[STRING_SIZE];
+        char name[100], desc[100], unit[100];
+        FILE *out;
 
-    unsigned int j;
-    char vt[20],rt[20];
-    int year, month, day, hour, minute, second;
+        unsigned int j;
+        char vt[20],rt[20];
+        int year, month, day, hour, minute, second;
 
-    /* initialization phase */
-    if (mode == -1) {
-        WxText = decode = latlon = 1;
-        if ((*local = (void *) ffopen(arg1,file_append ? "a" : "w")) == NULL)
-		fatal_error("csv could not open file %s", arg1);  
-	return 0;
-    }
+        /* initialization phase */
+        if (mode == -1) {
+                WxText = decode = latlon = 1;
+                if ((*local = (void *) ffopen(arg1, file_append ? "a" : "w")) == NULL)
+	                fatal_error("csv could not open file %s", arg1);  
+                return 0;
+        }
 
-    /* cleanup phase */
-   if (mode == -2) {
+        /* cleanup phase */
+        if (mode == -2) {
             return 0;
-    }
+        }
         
-    /* processing phase */
-    if (lat == NULL || lon == NULL) {
-	fprintf(stderr,"csv: latitude/longitude not defined, record skipped\n");
-	return 0;
-    }
-    printf("csv: 4\n");	
+        /* processing phase */
+        if (lat == NULL || lon == NULL) {
+                fprintf(stderr,"csv_nz: latitude/longitude not defined, record skipped\n");
+                return 0;
+        }
 
-    /* open output file */
-    out = (FILE *) *local;
+        /* Collect runtime and forecast time into vt and rt */
+        // sec refers to the array of sections. reftime refers the section 1-13:19)
+        reftime(sec, &year, &month, &day, &hour, &minute, &second);
+        sprintf(rt, "%4.4d%2.2d%2.2d %2.2d%2.2d", year,month,day,hour,minute); // second is omitted
 
-    /* Collect runtime and validtime into vt and rt */
+        // status (section 1-20)
+        int status = getStatus(sec);
+        if(status != 0){
+                fprintf(stderr,"csv_nz: test record skipped\n");
+                return 0;
+        }
 
-    // sec refers to the array of sections. reftime refers the section 1.
-    reftime(sec, &year, &month, &day, &hour, &minute, &second);
-    sprintf(rt, "%4.4d%2.2d%2.2d %2.2d%2.2d", year,month,day,hour,minute); // second is omitted
+        // parameter name (Section 4-11)
+        getExtName(sec, mode, NULL, name, desc, unit,".","_");
+
+        // forecast time  (section 4-19:22)
+        vt[0] = 0;
+        unsigned int ft = forecast_time_in_units(sec);
+        signed int sft = (ft & 0x80000000 == 0) ? ((signed int) ft) : -((signed int) (ft & 0x7fffffff));
+        sprintf(vt, "%d", sft);
 #if DEBUG
-    printf("ref time: %4.4d-%2.2d-%2.2d %2.2d:%2.2d", year,month,day,hour,minute);
+        //printf("reference time: %4.4d-%2.2d-%2.2d %2.2d\n", year,month,day,hour);
+        printf("reference time: %4.4d-%2.2d-%2.2d %2.2d:%2.2d", year,month,day,hour,minute);
+        printf("forecast time: %d\n", sft);
 #endif
 
-    // forecast time 
-    vt[0] = 0;
-    unsigned int ft = forecast_time_in_units(sec);
-    signed int sft = (ft & 0x80000000 == 0) ? ((signed int) ft) : -((signed int) (ft & 0x7fffffff));
-    printf("vertime: %d", sft);
-    sprintf(vt, "%d", sft);
-    printf("csv: 7\n");	
+        // stat type (section 4-47) (4.50011)        
+        int stat_type = getStatType(sec); // 1, 195, 196
+        if(stat_type != 1 && stat_type != 195 && stat_type != 196){
+                fprintf(stderr,"csv_nz: illegal stat type (section 4-47), record skipped\n");
+                return 0;
+        }
 
-    /*Get levels, parameter name, description and unit*/
+        // stat process time (section 4-50:53)
+        int stat_process_time = getStatProcessTime(sec);
+        if(stat_process_time != 5 && stat_process_time != 60){
+                fprintf(stderr,"csv_nz: illegal stat_process_time (section 4-50:53), record skipped\n");
+                return 0;
+        }
+        
+        // num data (section 5-6:9)
+        int num_data = getNumData(sec);
 
-    *new_inv_out = 0;
-    f_lev(call_ARG0(new_inv_out,NULL));
-
-    if (strcmp(new_inv_out, "reserved")==0) return 0;
-//    getName(sec, mode, NULL, name, desc, unit);
-    getExtName(sec, mode, NULL, name, desc, unit,".","_");
-//	fprintf(stderr,"Start processing of %s at %s\n", name, new_inv_out);
-//	fprintf(stderr,"Gridpoints in data: %d\n", ndata);
-//	fprintf(stderr,"Description: %s, Unit %s\n", desc,unit);
-
+        // show attributes
+#if DEBUG
+	printf("Start processing of %s\n", name);
+	printf("Gridpoints in data: %d\n", ndata);
+	printf("Num data: %d\n", num_data);
+	printf("Description: %s, Unit %s\n", desc, unit);
+	printf("Stat type: %d\n", stat_type);
+	printf("Stat process time: %d\n",  stat_process_time);	
+#endif
+        
+        /* open output file */
+        out = (FILE *) *local;
         for (j = 0; j < ndata; j++) {
             if (!UNDEFINED_VAL(data[j])) {
-                fprintf(out,"\"%s\",%s,\"%s\",\"%s\",%g,%g,%lg\n", rt, vt, name, new_inv_out, lon[j] > 180.0 ?  lon[j]-360.0 : lon[j], lat[j], data[j]);
+                //fprintf(out,"\"%s\",%s,\"%s\",\"%s\",%g,%g,%lg\n", rt, vt, name, new_inv_out, lon[j] > 180.0 ?  lon[j]-360.0 : lon[j], lat[j], data[j]);
+                fprintf(out,"\"%s\",%s,\"%s\",%d,%d,%g,%g,%lg\n", rt, vt, name, stat_type, stat_process_time, lon[j] > 180.0 ?  lon[j]-360.0 : lon[j], lat[j], data[j]);
+                //printf("\"%s\",%s,\"%s\",%g,%g,%lg\n", rt, vt, name, lon[j] > 180.0 ?  lon[j]-360.0 : lon[j], lat[j], data[j]);
             }
         }
 
         if (flush_mode) fflush(out);
         return 0;
+}
+
+int getStatus(unsigned char **sec){
+        return (int)(sec[1][20-1]);
+}
+
+int getStatType(unsigned char **sec){
+        return (int)(sec[4][47-1]);
+}
+
+int getStatProcessTime(unsigned char **sec){
+        return int4(sec[4]+50-1);
+}
+
+int getNumData(unsigned char **sec){
+        return int4(sec[5]+6-1);
 }
