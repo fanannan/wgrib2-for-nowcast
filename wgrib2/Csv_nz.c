@@ -19,10 +19,10 @@ extern double *lat, *lon;
 extern int decode, latlon;
 
 /*
- * HEADER:100:csv_nz:output:1:make comma separated file for NZ, X=file (WxText enabled)
+ * HEADER:100:csv_nz:output:2:make comma separated file for NZ, X=file (WxText enabled)
  */
 
-int f_csv_nz(ARG1) {
+int f_csv_nz(ARG2) {
 
         //char new_inv_out[STRING_SIZE];
         char name[100], desc[100], unit[100];
@@ -31,12 +31,18 @@ int f_csv_nz(ARG1) {
         unsigned int j;
         char vt[20],rt[20],et[20];
         int year, month, day, hour, minute, second;
+        double min_value = atof(arg2);
 
         /* initialization phase */
         if (mode == -1) {
                 WxText = decode = latlon = 1;
                 if ((*local = (void *) ffopen(arg1, file_append ? "a" : "w")) == NULL)
 	                fatal_error("csv could not open file %s", arg1);  
+                 // minimum value to output
+                if(min_value < 0.0){
+                        fatal_error("arg2 must be a positive number: %s", arg2);
+                        return 0;                
+                }
                 return 0;
         }
 
@@ -77,7 +83,7 @@ int f_csv_nz(ARG1) {
         vt[0] = 0;
         unsigned int ft = forecast_time_in_units(sec);
         signed int sft = (ft & 0x80000000) ? -((signed int) (ft & 0x7fffffff)) : ((signed int) ft);
-        sprintf(vt, "%d", sft);
+        //sprintf(vt, "%x %d", ft, sft);
 #if DEBUG
         //printf("reference time: %4.4d-%2.2d-%2.2d %2.2d\n", year,month,day,hour);
         printf("reference time: %4.4d-%2.2d-%2.2d %2.2d:%2.2d", year,month,day,hour,minute);
@@ -118,9 +124,9 @@ int f_csv_nz(ARG1) {
         /* open output file */
         out = (FILE *) *local;
         for (j = 0; j < ndata; j++) {
-            if (!UNDEFINED_VAL(data[j]) && data[j] > 0.0 && (param == 8 || param == 203)) {
+            if (!UNDEFINED_VAL(data[j]) && data[j] >= min_value && data[j] > 0.0 && (param == 8 || param == 203)) {
                 //fprintf(out,"\"%s\",\"%s\",%s,\"%s\",%d,%d,%g,%g,%lg\n", rt, et, vt, name, stat_type, stat_process_time, lon[j] > 180.0 ?  lon[j]-360.0 : lon[j], lat[j], data[j]);
-                fprintf(out,"\"%s\",\"%s\",%s,%g,%g,%lg\n", rt, et, vt, lon[j] > 180.0 ?  lon[j]-360.0 : lon[j], lat[j], data[j]);
+                fprintf(out,"\"%s\",\"%s\",%d,%g,%g,%lg\n", rt, et, sft, lon[j] > 180.0 ?  lon[j]-360.0 : lon[j], lat[j], data[j]);
             }
         }
         if (flush_mode) fflush(out);
