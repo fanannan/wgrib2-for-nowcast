@@ -19,10 +19,10 @@ extern double *lat, *lon;
 extern int decode, latlon;
 
 /*
- * HEADER:100:csv:output:1:make comma separated file, X=file (WxText enabled)
+ * HEADER:100:csv_nz:output:1:make comma separated file for NZ, X=file (WxText enabled)
  */
 
-int f_csv(ARG1) {
+int f_csv_nz(ARG1) {
 
     char new_inv_out[STRING_SIZE];
     char name[100], desc[100], unit[100];
@@ -34,9 +34,6 @@ int f_csv(ARG1) {
 
     /* initialization phase */
     if (mode == -1) {
-#if DEBUG
-        printf("csv: init\n");
-#endif
         WxText = decode = latlon = 1;
         if ((*local = (void *) ffopen(arg1,file_append ? "a" : "w")) == NULL)
 		fatal_error("csv could not open file %s", arg1);  
@@ -44,23 +41,16 @@ int f_csv(ARG1) {
     }
 
     /* cleanup phase */
-
    if (mode == -2) {
-#if DEBUG
-            printf("csv: pre cleanup\n");
-#endif
             return 0;
     }
         
     /* processing phase */
-
-#if DEBUG
-    printf("csv: pre process\n");
-#endif
     if (lat == NULL || lon == NULL) {
 	fprintf(stderr,"csv: latitude/longitude not defined, record skipped\n");
 	return 0;
     }
+    printf("csv: 4\n");	
 
     /* open output file */
     out = (FILE *) *local;
@@ -69,20 +59,18 @@ int f_csv(ARG1) {
 
     // sec refers to the array of sections. reftime refers the section 1.
     reftime(sec, &year, &month, &day, &hour, &minute, &second);
-    sprintf(rt, "%4.4d-%2.2d-%2.2d %2.2d:%2.2d:%2.2d", year,month,day,hour,minute,second);
+    sprintf(rt, "%4.4d%2.2d%2.2d %2.2d%2.2d", year,month,day,hour,minute); // second is omitted
 #if DEBUG
-    printf("ref time: %4.4d-%2.2d-%2.2d %2.2d:%2.2d:%2.2d", year,month,day,hour,minute,second);
+    printf("ref time: %4.4d-%2.2d-%2.2d %2.2d:%2.2d", year,month,day,hour,minute);
 #endif
 
-    // verification time: reference_time + forecast_time + statistical processing time (if any)
-    // vertime refers the reference time at section 1 and the forecast time described at the section 4 at uint4(code_4_4 + 1)
+    // forecast time 
     vt[0] = 0;
-    if (verftime(sec, &year, &month, &day, &hour, &minute, &second) == 0) {
-#if DEBUG
-        printf("vertime: %4.4d-%2.2d-%2.2d %2.2d:%2.2d:%2.2d", year,month,day,hour,minute,second);
-#endif 
-       sprintf(vt,"%4.4d-%2.2d-%2.2d %2.2d:%2.2d:%2.2d", year,month,day,hour,minute,second);
-    }
+    unsigned int ft = forecast_time_in_units(sec);
+    signed int sft = (ft & 0x80000000 == 0) ? ((signed int) ft) : -((signed int) (ft & 0x7fffffff));
+    printf("vertime: %d", sft);
+    sprintf(vt, "%d", sft);
+    printf("csv: 7\n");	
 
     /*Get levels, parameter name, description and unit*/
 
@@ -96,24 +84,12 @@ int f_csv(ARG1) {
 //	fprintf(stderr,"Gridpoints in data: %d\n", ndata);
 //	fprintf(stderr,"Description: %s, Unit %s\n", desc,unit);
 
-     /* Lage if-setning rundt hele som sjekker om alt eller deler skal ut*/
+        for (j = 0; j < ndata; j++) {
+            if (!UNDEFINED_VAL(data[j])) {
+                fprintf(out,"\"%s\",%s,\"%s\",\"%s\",%g,%g,%lg\n", rt, vt, name, new_inv_out, lon[j] > 180.0 ?  lon[j]-360.0 : lon[j], lat[j], data[j]);
+            }
+        }
 
-    if (WxNum > 0) {
-        for (j = 0; j < ndata; j++) {
-            if (!UNDEFINED_VAL(data[j])) {
-	        fprintf(out,"\"%s\",\"%s\",\"%s\",\"%s\",%g,%g,\"%s\"\n",rt,vt,name,
-		    new_inv_out,lon[j] > 180.0 ?  lon[j]-360.0 : lon[j],lat[j],WxLabel(data[j]));
-	    }
-	}
-    }
-    else {
-        for (j = 0; j < ndata; j++) {
-            if (!UNDEFINED_VAL(data[j])) {
-	        fprintf(out,"\"%s\",\"%s\",\"%s\",\"%s\",%g,%g,%lg\n",rt,vt,name,
-		    new_inv_out,lon[j] > 180.0 ?  lon[j]-360.0 : lon[j],lat[j],data[j]);
-	    }
-	}
-    }
-    if (flush_mode) fflush(out);
-    return 0;
+        if (flush_mode) fflush(out);
+        return 0;
 }

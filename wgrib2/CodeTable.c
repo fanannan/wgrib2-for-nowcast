@@ -610,6 +610,8 @@ int code_table_4_4(unsigned char **sec) {
     if (p == NULL) return -1;
     return (int) *p;
 }
+
+// directly called by forecast_time_in_units in Code_Values.c
 unsigned char *code_table_4_4_location(unsigned char **sec) {
     int pdt;
     pdt = GB2_ProdDefTemplateNo(sec);

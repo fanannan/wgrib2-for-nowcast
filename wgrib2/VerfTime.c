@@ -132,6 +132,8 @@ int verftime(unsigned char **sec, int *year, int *month, int *day, int *hour, in
 
     units = code_table_4_4(sec);
     dtime = forecast_time_in_units(sec);
+    //printf("time:%x",dtime);
+    //printf("time:%x",add_time(year, month, day, hour, minute, second, dtime, units));
     return add_time(year, month, day, hour, minute, second, dtime, units);
 }
 

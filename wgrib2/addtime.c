@@ -102,7 +102,12 @@ int add_time(int *year, int *month, int *day, int *hour, int *minute, int *secon
 	unit = MINUTE;
     }
     if (unit == MINUTE) {
-	mm += dtime;
+        // ebnabled subtraction only for MINUTE
+        //if(dtime & 0x80000000 != 0){
+        //        mm -= (dtime & 0x7fffffff);
+        //} else {
+        	mm += dtime;
+	//}
 	// dtime = floor(mm/60.0);
 	dtime = mm /60;
 	*minute = mm - dtime*60;

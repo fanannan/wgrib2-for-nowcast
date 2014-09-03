@@ -225,6 +225,7 @@ int f_ave(int mode, unsigned char **sec, float *data, unsigned int ndata, char *
 int f_bin(int mode, unsigned char **sec, float *data, unsigned int ndata, char *inv, void **local, const char *arg1);
 int f_cress_lola(int mode, unsigned char **sec, float *data, unsigned int ndata, char *inv, void **local, const char *arg1, const char *arg2, const char *arg3, const char *arg4);
 int f_csv(int mode, unsigned char **sec, float *data, unsigned int ndata, char *inv, void **local, const char *arg1);
+int f_csv_nz(int mode, unsigned char **sec, float *data, unsigned int ndata, char *inv, void **local, const char *arg1);
 int f_fcst_ave(int mode, unsigned char **sec, float *data, unsigned int ndata, char *inv, void **local, const char *arg1, const char *arg2);
 int f_fi(int mode, unsigned char **sec, float *data, unsigned int ndata, char *inv, void **local);
 int f_grib(int mode, unsigned char **sec, float *data, unsigned int ndata, char *inv, void **local, const char *arg1);

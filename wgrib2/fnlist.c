@@ -220,6 +220,7 @@ struct function functions[] = {
    {"bin",f_bin, output, 1, "write binary data to X", 100},
    {"cress_lola",f_cress_lola, output, 4, "lon-lat grid values X=lon0:nlon:dlon Y=lat0:nlat:dlat Z=file A=radius1:radius2:..:radiusN", 111},
    {"csv",f_csv, output, 1, "make comma separated file, X=file (WxText enabled)", 100},
+   {"csv_nz",f_csv_nz, output, 1, "make comma separated file for NZ, X=file (WxText enabled)", 100},
    {"fcst_ave",f_fcst_ave, output, 2, "average X=time step, Y=output grib file needs file is special order", 000},
    {"fi",f_fi, output, 0, "null output operation", 100},
    {"grib",f_grib, output, 1, "writes GRIB record (one submessage) to X", 100},
