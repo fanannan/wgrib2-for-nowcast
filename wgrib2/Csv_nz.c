@@ -124,7 +124,7 @@ int f_csv_nz(ARG2) {
         /* open output file */
         out = (FILE *) *local;
         for (j = 0; j < ndata; j++) {
-            if (!UNDEFINED_VAL(data[j]) && data[j] >= min_value && data[j] > 0.0 && (param == 8 || param == 203)) {
+            if (!UNDEFINED_VAL(data[j]) && data[j] >= min_value && data[j] >= 0.0 && (param == 8 || param == 203)) {
                 //fprintf(out,"\"%s\",\"%s\",%s,\"%s\",%d,%d,%g,%g,%lg\n", rt, et, vt, name, stat_type, stat_process_time, lon[j] > 180.0 ?  lon[j]-360.0 : lon[j], lat[j], data[j]);
                 fprintf(out,"\"%s\",\"%s\",%d,%g,%g,%lg\n", rt, et, sft, lon[j] > 180.0 ?  lon[j]-360.0 : lon[j], lat[j], data[j]);
             }
