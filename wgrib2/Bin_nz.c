@@ -185,6 +185,7 @@ int f_bin_nz(ARG3) {
         int year, month, day, hour, minute, second;
 
         int ft_mode;
+        int gridlines = 0;
         if(strcmp(arg2, "snapshot") == 0){
                 ft_mode = FT_SNAPSHOT;
         } else if (strcmp(arg2, "30m") == 0){
@@ -193,6 +194,18 @@ int f_bin_nz(ARG3) {
                 ft_mode = FT_FORECAST60m;
         } else if (strcmp(arg2, "1k") == 0){
                 ft_mode = FT_1kmMeshOnly;
+        } else if(strcmp(arg2, "snapshot+") == 0){
+                ft_mode = FT_SNAPSHOT;
+                gridlines = 1;
+        } else if (strcmp(arg2, "30m+") == 0){
+                ft_mode = FT_FORECAST30m;
+                gridlines = 1;
+        } else if (strcmp(arg2, "60m+") == 0){
+                ft_mode = FT_FORECAST60m;
+                gridlines = 1;
+        } else if (strcmp(arg2, "1k+") == 0){
+                ft_mode = FT_1kmMeshOnly;
+                gridlines = 1;
         } else {
                fatal_error("bin_nz: invalid argment %s", arg2);  
         }
@@ -226,13 +239,30 @@ int f_bin_nz(ARG3) {
 
         /* cleanup phase */
         if (mode == -2) {
-                /* open output file */
-                out = (FILE *) *local;
                 //fprintf(stderr, "new matrix status: %d\n", new_matrix_status);
                 add_matrix(sum_matrix, new_matrix);
                 // clear_matrix(new_matrix);
                 new_matrix_status = 0;
-                short int x, y;
+                
+                // draw grid lines
+                short int lg, la, x, y;
+                if(gridlines == 1){
+                        for(lg = (short int)(MIN_LONGTITUDE+1); lg < (short int)MAX_LONGTITUDE; lg++){
+                                x = min(max(0, translate_longtitude_to_index_250m(lg) - x_offset), x_size);
+                                for(y = 0; y < y_size; y++){                                                
+                                        sum_matrix[y * x_size + x] = 128.0;
+                                }
+                        }
+                        for(la = (short int)(MIN_LATITUDE+1); la < (short int)MAX_LATITUDE; la++){                                                
+                               y = min(max(0, translate_latitude_to_index_250m(la) - y_offset), y_size);
+                               for(x = 0; x < x_size; x++){
+                                        sum_matrix[y * x_size + x] = 128.0;
+                                }
+                        }
+                }
+                
+                /* open output file */
+                out = (FILE *) *local;
                 long int counter = 0;
                 for (y=0;y<y_size;y++) {
                         for (x=0;x<x_size;x++) {
